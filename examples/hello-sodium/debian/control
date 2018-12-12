@@ -1,4 +1,4 @@
-Source: sodium-native
+Source: hello-sodium
 Section: misc
 Priority: optional
 Maintainer: "Michael Williams" <michael.williams@enspiral.com>
@@ -8,7 +8,7 @@ Build-Depends:
   , npm
 Standards-Version: 4.1.4
 
-Package: sodium-native
+Package: hello-sodium
 Architecture: any
 Depends:
   ${misc:Depends}

@@ -16,6 +16,6 @@ override_dh_auto_build:
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod +x debian/sodium-native/usr/lib/sodium-native/bin.js
+	chmod +x debian/hello-sodium/usr/lib/hello-sodium/bin.js
 
 override_dh_shlibdeps:
