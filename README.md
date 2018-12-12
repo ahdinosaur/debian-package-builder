@@ -73,6 +73,7 @@ if not using `--docker`, you need the following packages installed:
 
 - https://blog.cloudflare.com/porting-our-software-to-arm64/
 - https://www.ecliptik.com/Cross-Building-and-Running-Multi-Arch-Docker-Images/
+- https://askubuntu.com/questions/850568/how-do-i-represent-arch-pc-linux-gnu-in-a-debian-install-file
 - https://packages.debian.org/sid/qemu-user-static
 - https://www.debian.org/doc/manuals/maint-guide/start.en.html
 - https://www.debian.org/doc/debian-policy/index.html#

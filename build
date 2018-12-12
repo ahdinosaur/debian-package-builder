@@ -17,7 +17,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=hdi:o:n:a
-LONGOPTS=help,docker,input:,output:,name:,arch:
+LONGOPTS=help,docker,input:,output:,name:,arch:,node-version:,debian-release:,apt-proxy:
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -34,6 +34,7 @@ eval set -- "$PARSED"
 
 HELP=n DOCKER=n
 INPUT=- OUTPUT=- NAME=- ARCH=-
+
 while true; do
     case "$1" in
         -h|--help)
@@ -58,6 +59,15 @@ while true; do
             ;;
         -a|--arch)
             ARCH="$2"
+            shift 2
+            ;;
+        --node-version)
+            shift 2
+            ;;
+        --debian-release)
+            shift 2
+            ;;
+        --apt-proxy)
             shift 2
             ;;
         --)
@@ -92,6 +102,12 @@ Usage:
 
     -h, --help: show this usage
     -d, --docker: build image using docker
+
+  Docker-only arguments:
+
+    --node-version <version>: optional Node.js version (default: 10)
+    --debian-release <release>: optional Debian release (default: buster) 
+    --apt-proxy <address>: optional apt proxy
 
   Examples:
 

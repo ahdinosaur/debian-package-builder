@@ -4,8 +4,7 @@ Priority: optional
 Maintainer: "Michael Williams" <michael.williams@enspiral.com>
 Build-Depends:
   debhelper (>=10~)
-  , nodejs
-  , npm
+  , nodejs (>= 10), nodejs (<< 11)
 Standards-Version: 4.1.4
 
 Package: hello-sodium
