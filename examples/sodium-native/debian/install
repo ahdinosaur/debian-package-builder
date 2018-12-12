@@ -1,0 +1,4 @@
+package.json usr/lib/sodium-native
+package-lock.json usr/lib/sodium-native
+node_modules usr/lib/sodium-native
+*.js usr/lib/sodium-native

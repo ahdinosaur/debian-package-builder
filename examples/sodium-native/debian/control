@@ -1,0 +1,18 @@
+Source: sodium-native
+Section: misc
+Priority: optional
+Maintainer: "Michael Williams" <michael.williams@enspiral.com>
+Build-Depends:
+  debhelper (>=10~)
+  , nodejs
+  , npm
+Standards-Version: 4.1.4
+
+Package: sodium-native
+Architecture: any
+Depends:
+  ${misc:Depends}
+  , ${shlibs:Depends}
+  , nodejs
+Description: An example Node.js script 
+  with native crypto packaged for Debian

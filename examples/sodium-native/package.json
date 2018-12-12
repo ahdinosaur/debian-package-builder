@@ -1,0 +1,14 @@
+{
+  "name": "sodium-native",
+  "version": "1.0.0",
+  "description": "an example script with native crypto as a Debian package",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test"
+  },
+  "author": "ahdinosaur",
+  "license": "ISC",
+  "dependencies": {
+    "sodium-native": "^2.2.3"
+  }
+}

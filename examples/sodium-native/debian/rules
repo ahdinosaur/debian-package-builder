@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+LC_ALL := C.UTF-8
+export LC_ALL
+
+NODE_ARCH := $(shell node -p process.arch)
+NODE_PLATFORM := $(shell node -p process.platform)
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	npm install
+	ls -lh node_modules/sodium-native/prebuilds
+	find node_modules/sodium-native/prebuilds -maxdepth 1 -type d -not -name prebuilds -not -name "${NODE_PLATFORM}-${NODE_ARCH}" -exec rm -r {} \;
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod +x debian/sodium-native/usr/lib/sodium-native/bin.js
+
+override_dh_shlibdeps:
