@@ -12,7 +12,10 @@
     "example:hello-world:arm64": "./build --docker --arch arm64 --input examples/hello-world --output output",
     "example:hello-sodium:amd64": "./build --docker --arch amd64 --input examples/hello-sodium --output output",
     "example:hello-sodium:armhf": "./build --docker --arch armhf --input examples/hello-sodium --output output",
-    "example:hello-sodium:arm64": "./build --docker --arch arm64 --input examples/hello-sodium --output output"
+    "example:hello-sodium:arm64": "./build --docker --arch arm64 --input examples/hello-sodium --output output",
+    "example:hello-level:amd64": "./build --docker --arch amd64 --input examples/hello-level --output output",
+    "example:hello-level:armhf": "./build --docker --arch armhf --input examples/hello-level --output output",
+    "example:hello-level:arm64": "./build --docker --arch arm64 --input examples/hello-level --output output"
   },
   "repository": {
     "type": "git",

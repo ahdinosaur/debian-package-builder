@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+LC_ALL := C.UTF-8
+export LC_ALL
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	npm install
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod +x debian/hello-level/usr/lib/hello-level/bin.js

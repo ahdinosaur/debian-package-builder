@@ -1,0 +1,14 @@
+{
+  "name": "hello-level",
+  "version": "1.0.0",
+  "description": "an example script using leveldown as a Debian package",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test"
+  },
+  "author": "ahdinosaur",
+  "license": "ISC",
+  "dependencies": {
+    "leveldown": "^4.0.1"
+  }
+}
