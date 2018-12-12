@@ -1,3 +1,5 @@
+var catNames = require('cat-names')
+
 module.exports = function example () {
-  return "Hello World!"
+  return `Hello ${catNames.random()}!`
 }
