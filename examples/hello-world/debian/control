@@ -1,0 +1,18 @@
+Source: hello-world
+Section: misc
+Priority: optional
+Maintainer: "Michael Williams" <michael.williams@enspiral.com>
+Build-Depends:
+  debhelper (>=10~)
+  , nodejs
+  , npm
+Standards-Version: 4.1.4
+
+Package: hello-world
+Architecture: any
+Depends:
+  ${misc:Depends}
+  , ${shlibs:Depends}
+  , nodejs
+Description: An example Node.js script packaged
+  for Debian

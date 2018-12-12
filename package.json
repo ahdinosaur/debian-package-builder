@@ -1,0 +1,29 @@
+{
+  "name": "debian-image-builder",
+  "version": "0.0.0",
+  "description": "build Debian disk images (with Docker)",
+  "bin": "./build",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "example:hello-world:amd64": "./build --docker --arch amd64 --input examples/hello-world --output output",
+    "example:hello-world:armhf": "./build --docker --arch armhf --input examples/hello-world --output output",
+    "example:hello-world:arm64": "./build --docker --arch arm64 --input examples/hello-world --output output"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ahdinosaur/debian-image-builder.git"
+  },
+  "keywords": [
+    "debian",
+    "vmdb2",
+    "vmdebootrap"
+  ],
+  "author": "ahdinosaur",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ahdinosaur/debian-image-builder/issues"
+  },
+  "homepage": "https://github.com/ahdinosaur/debian-image-builder#readme"
+}

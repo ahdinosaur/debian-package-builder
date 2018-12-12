@@ -1,0 +1,11 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "an example script as a Debian package",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test"
+  },
+  "author": "ahdinosaur",
+  "license": "ISC"
+}
