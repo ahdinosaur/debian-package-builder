@@ -110,7 +110,6 @@ then
   ./build-docker ${ARGUMENTS}
 else
   umask 022
-  rm -rf "${CWD}/${OUTPUT}/${NAME}"
 
   WORKDIR=$(mktemp -d)
 
