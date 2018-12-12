@@ -24,12 +24,6 @@ NAME=name
 ARCH=name
 INPUT_NAME=name
 
-IMAGE_NAME=${IMAGE_NAME:-debian_nodejs_package_builder}
-CONTAINER_NAME=${CONTAINER_NAME:-debian_nodejs_package_builder_work}
-PRESERVE_CONTAINER=0
-CONTAINER_EXISTS=$($DOCKER ps -a --filter name="$CONTAINER_NAME" -q)
-CONTAINER_RUNNING=$($DOCKER ps --filter name="$CONTAINER_NAME" -q)
-
 NEXT_ARGUMENTS=""
 while true; do
   if [ "$#" == "0" ]
@@ -72,6 +66,12 @@ then
   NAME="${INPUT_NAME}"
 fi
 NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "--name ${NAME}")"
+
+IMAGE_NAME=${IMAGE_NAME:-debian_nodejs_package_builder}
+CONTAINER_NAME=${CONTAINER_NAME:-debian_nodejs_package_builder_${ARCH}_work}
+PRESERVE_CONTAINER=0
+CONTAINER_EXISTS=$($DOCKER ps -a --filter name="$CONTAINER_NAME" -q)
+CONTAINER_RUNNING=$($DOCKER ps --filter name="$CONTAINER_NAME" -q)
 
 if [ "$CONTAINER_RUNNING" != "" ]; then
   echo "The build is already running in container $CONTAINER_NAME. Aborting."
