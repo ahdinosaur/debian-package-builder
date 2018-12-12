@@ -25,6 +25,7 @@ ARCH=name
 
 NODE_VERSION=10
 DEBIAN_RELEASE=buster
+APT_PROXY=
 
 INPUT_NAME=name
 
@@ -69,6 +70,11 @@ while true; do
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
+    --apt-proxy)
+      APT_PROXY="$2"
+      NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
+      shift 2
+      ;;
     *)
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1")"
       shift
@@ -101,6 +107,7 @@ $DOCKER build \
   --build-arg ARCH=${ARCH} \
   --build-arg NODE_VERSION=${NODE_VERSION} \
   --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
+  --build-arg http_proxy=${APT_PROXY} \
   -t debian_nodejs_package_builder \
   .
 
