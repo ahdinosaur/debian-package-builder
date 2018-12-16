@@ -1,0 +1,4 @@
+package.json usr/lib/hello-node
+package-lock.json usr/lib/hello-node
+node_modules usr/lib/hello-node
+*.js usr/lib/hello-node

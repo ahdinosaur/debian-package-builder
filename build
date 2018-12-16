@@ -16,8 +16,8 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 1
 fi
 
-OPTIONS=hdi:o:n:a
-LONGOPTS=help,docker,input:,output:,name:,arch:,node-version:,debian-release:,apt-proxy:
+OPTIONS=hdti:o:n:a
+LONGOPTS=help,docker,target:,input:,output:,name:,arch:,node-version:,debian-release:,apt-proxy:
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -33,7 +33,7 @@ fi
 eval set -- "$PARSED"
 
 HELP=n DOCKER=n
-INPUT=- OUTPUT=- NAME=- ARCH=-
+TARGET=- INPUT=- OUTPUT=- NAME=- ARCH=-
 
 while true; do
     case "$1" in
@@ -44,6 +44,10 @@ while true; do
         -d|--docker)
             DOCKER=y
             shift
+            ;;
+        -t|--target)
+            TARGET="$2"
+            shift 2
             ;;
         -i|--input)
             INPUT="$2"
@@ -83,20 +87,22 @@ done
 
 if
   [ "${HELP}" == "y" ] || \
+  [ "${TARGET}" == "-" ] || \
   [ "${INPUT}" == "-" ] || \
   [ "${OUTPUT}" == "-" ] || \
   [ "${ARCH}" == "-" ]
 then
   cat >&2 <<EOF
 Usage:
-  debian-nodejs-package-builder [options]
+  debian-package-builder [options]
 
   Arguments:
 
-    --arch <arch>: architecture
-    --input <path>: required directory of input image spec
-    --output <path>: required directory to output build results
-    --name <name>: optional name of image
+    -t, --target <target>: (required) target of build (nodejs)
+    -i, --input <path>: (required) directory of input image spec
+    -o, --output <path>: (required) directory to output build results
+    -a, --arch <arch>: (required) architecture
+    -n, --name <name>: optional name of image
 
   Flags:
 
@@ -105,13 +111,14 @@ Usage:
 
   Docker-only arguments:
 
-    --node-version <version>: optional Node.js version (default: 10)
     --debian-release <release>: optional Debian release (default: buster) 
+    --target-version <version>: optional target version
+      - default Node.js version: 10
     --apt-proxy <address>: optional apt proxy
 
   Examples:
 
-    debian-nodejs-package-builder --docker --input ./examples/hello-world --output ./output
+    debian-package-builder --docker --target nodejs --input ./examples/hello-world --output ./output --arch amd64
 EOF
   exit 1
 fi

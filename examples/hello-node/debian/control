@@ -1,4 +1,4 @@
-Source: hello-world
+Source: hello-node
 Section: misc
 Priority: optional
 Maintainer: "Michael Williams" <michael.williams@enspiral.com>
@@ -7,7 +7,7 @@ Build-Depends:
   , nodejs
 Standards-Version: 4.1.4
 
-Package: hello-world
+Package: hello-node
 Architecture: any
 Depends:
   ${misc:Depends}

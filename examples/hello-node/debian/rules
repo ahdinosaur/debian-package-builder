@@ -11,4 +11,4 @@ override_dh_auto_build:
 
 override_dh_fixperms:
 	dh_fixperms
-	chmod +x debian/hello-world/usr/lib/hello-world/bin.js
+	chmod +x debian/hello-node/usr/lib/hello-node/bin.js

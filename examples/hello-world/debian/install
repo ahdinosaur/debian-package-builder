@@ -1,4 +1,0 @@
-package.json usr/lib/hello-world
-package-lock.json usr/lib/hello-world
-node_modules usr/lib/hello-world
-*.js usr/lib/hello-world

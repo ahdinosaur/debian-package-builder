@@ -1,6 +1,6 @@
-# debian-nodejs-package-builder
+# debian-package-builder
 
-build Node.js scripts into Debian packages (optionally using Docker for cross-compilation environment)
+build Node.js (and other) scripts into Debian packages (optionally using Docker for cross-compilation environment)
 
 ## background
 
@@ -11,17 +11,16 @@ i want to port [Scuttlebutt](https://scuttlebutt.nz) to Debian packages for [Pea
 with Docker installed:
 
 ```
-git clone --recursive https://github.com/ahdinosaur/debian-nodejs-package-builder
-cd debian-nodejs-package-builder
-git submodule update --init --recursive
-npm run example:hello-world:amd64
-sudo dpkg -i output/hello-world/hello-world_1.0.0_amd64.deb
+git clone https://github.com/ahdinosaur/debian-package-builder
+cd debian-package-builder
+npm run example:hello-node:amd64
+sudo dpkg -i output/hello-node/hello-node.0.0_amd64.deb
 
 # or to cross-compile for armhf
-npm run example:hello-world:armhf
+npm run example:hello-node:armhf
 
 # or to cross-compile for arm64
-npm run example:hello-world:arm64
+npm run example:hello-node:arm64
 ```
 
 see more example inputs in [`./examples`](./examples)
@@ -29,37 +28,44 @@ see more example inputs in [`./examples`](./examples)
 ## install
 
 ```
-npm install -g debian-nodejs-package-builder
+npm install -g debian-package-builder
 ```
 
 ## usage
 
 ```
 Usage:
-  debian-nodejs-package-builder [options]
+  debian-package-builder [options]
 
   Arguments:
 
-    --arch <arch>: architecture
-    --input <path>: required directory of input image spec
-    --output <path>: required directory to output build results
-    --name <name>: optional name of image
+    -t, --target <target>: (required) target of build (nodejs)
+    -i, --input <path>: (required) directory of input image spec
+    -o, --output <path>: (required) directory to output build results
+    -a, --arch <arch>: (required) architecture
+    -n, --name <name>: optional name of image
 
   Flags:
 
     -h, --help: show this usage
     -d, --docker: build image using docker
 
+  Docker-only arguments:
+
+    --debian-release <release>: optional Debian release (default: buster) 
+    --target-version <version>: optional target version
+      - default Node.js version: 10
+    --apt-proxy <address>: optional apt proxy
+
   Examples:
 
-    debian-nodejs-package-builder --docker --input ./examples/hello-world --output ./output
+    debian-package-builder --docker --target nodejs --input ./examples/hello-world --output ./output --arch amd64
 ```
 
 if using `--docker`, you need Docker installed.
 
 if not using `--docker`, you need the following packages installed:
 
-- `node` (preferably from [NodeSource](https://github.com/nodesource/distributions#deb))
 - `git`
 - `curl`
 - `gnupg`
@@ -68,6 +74,10 @@ if not using `--docker`, you need the following packages installed:
 - `libtool`
 - `debhelper`
 - `devscripts`
+
+if intended target is `nodejs`, you also need:
+
+- `nodejs` (preferably from [NodeSource](https://github.com/nodesource/distributions#deb))
 
 ## references
 

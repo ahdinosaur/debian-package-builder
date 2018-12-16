@@ -18,12 +18,13 @@ set -e
 
 set -o errexit -o pipefail -o noclobber -o nounset
 
+TARGET=-
 INPUT=input
 OUTPUT=output
 NAME=name
 ARCH=name
 
-NODE_VERSION=10
+TARGET_VERSION=-
 DEBIAN_RELEASE=buster
 APT_PROXY=
 
@@ -38,6 +39,11 @@ while true; do
   case "$1" in
     -d|--docker)
       shift
+      ;;
+    -t|--target)
+      TARGET="$2"
+      NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
+      shift 2
       ;;
     -i|--input)
       INPUT="$2"
@@ -81,14 +87,26 @@ while true; do
       ;;
   esac
 done
+
 if [ "${NAME}" == "name" ]
 then
   NAME="${INPUT_NAME}"
 fi
+
+if [ "${TARGET_VERSION}" == "-" ]
+then
+  if [ "${TARGET}" == "nodejs" ]
+  then
+    TARGET_VERSION=10
+  fi
+fi
+
 NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "--name ${NAME}")"
 
-IMAGE_NAME=${IMAGE_NAME:-debian_nodejs_package_builder}
-CONTAINER_NAME=${CONTAINER_NAME:-debian_nodejs_package_builder_${ARCH}_work}
+BASE_IMAGE_NAME=${BASE_IMAGE_NAME:-debian-package-builder}
+TARGET_IMAGE_NAME=${TARGET_IMAGE_NAME:-debian-${TARGET}-package-builder}
+CONTAINER_NAME=${CONTAINER_NAME:-debian-${TARGET}-package-builder-${ARCH}-work}
+
 PRESERVE_CONTAINER=0
 CONTAINER_EXISTS=$($DOCKER ps -a --filter name="$CONTAINER_NAME" -q)
 CONTAINER_RUNNING=$($DOCKER ps --filter name="$CONTAINER_NAME" -q)
@@ -103,18 +121,29 @@ fi
 
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
+# build base image
 $DOCKER build \
-  --build-arg ARCH=${ARCH} \
-  --build-arg NODE_VERSION=${NODE_VERSION} \
-  --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
   --build-arg http_proxy=${APT_PROXY} \
-  -t debian_nodejs_package_builder \
+  --build-arg ARCH=${ARCH} \
+  --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
+  -t ${BASE_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE} \
+  -f docker/base.Dockerfile \
+  .
+
+# build target image
+$DOCKER build \
+  --build-arg http_proxy=${APT_PROXY} \
+  --build-arg ARCH=${ARCH} \
+  --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
+  --build-arg TARGET_VERSION=${TARGET_VERSION} \
+  -t ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
+  -f docker/${TARGET}.Dockerfile \
   .
 
 echo $INPUT
 trap "echo 'got CTRL+C... please wait 5s'; $DOCKER stop -t 5 ${CONTAINER_NAME}" SIGINT SIGTERM
 $DOCKER create --name "${CONTAINER_NAME}" --privileged \
-  ${IMAGE_NAME} \
+  ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
   bash -e -o errexit -o pipefail -o noclobber -o nounset -c "
     cd /app; ./build ${NEXT_ARGUMENTS};
   "

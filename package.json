@@ -1,35 +1,36 @@
 {
-  "name": "debian-image-builder",
+  "name": "debian-package-builder",
   "version": "0.0.0",
-  "description": "build Debian disk images (with Docker)",
+  "description": "build Debian packages (with Docker)",
   "bin": "./build",
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "example:hello-world:amd64": "./build --docker --arch amd64 --input examples/hello-world --output output",
-    "example:hello-world:armhf": "./build --docker --arch armhf --input examples/hello-world --output output",
-    "example:hello-world:arm64": "./build --docker --arch arm64 --input examples/hello-world --output output",
-    "example:hello-sodium:amd64": "./build --docker --arch amd64 --input examples/hello-sodium --output output",
-    "example:hello-sodium:armhf": "./build --docker --arch armhf --input examples/hello-sodium --output output",
-    "example:hello-sodium:arm64": "./build --docker --arch arm64 --input examples/hello-sodium --output output",
-    "example:hello-level:amd64": "./build --docker --arch amd64 --input examples/hello-level --output output",
-    "example:hello-level:armhf": "./build --docker --arch armhf --input examples/hello-level --output output",
-    "example:hello-level:arm64": "./build --docker --arch arm64 --input examples/hello-level --output output"
+    "example:hello-node:amd64": "./build --docker --target nodejs --arch amd64 --input examples/hello-node --output output",
+    "example:hello-node:armhf": "./build --docker --target nodejs --arch armhf --input examples/hello-node --output output",
+    "example:hello-node:arm64": "./build --docker --target nodejs --arch arm64 --input examples/hello-node --output output",
+    "example:hello-sodium:amd64": "./build --docker --target nodejs --arch amd64 --input examples/hello-sodium --output output",
+    "example:hello-sodium:armhf": "./build --docker --target nodejs --arch armhf --input examples/hello-sodium --output output",
+    "example:hello-sodium:arm64": "./build --docker --target nodejs --arch arm64 --input examples/hello-sodium --output output",
+    "example:hello-level:amd64": "./build --docker --target nodejs --arch amd64 --input examples/hello-level --output output",
+    "example:hello-level:armhf": "./build --docker --target nodejs --arch armhf --input examples/hello-level --output output",
+    "example:hello-level:arm64": "./build --docker --target nodejs --arch arm64 --input examples/hello-level --output output"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ahdinosaur/debian-image-builder.git"
+    "url": "git+ssh://git@github.com/ahdinosaur/debian-package-builder.git"
   },
   "keywords": [
     "debian",
-    "vmdb2",
-    "vmdebootrap"
+    "deb",
+    "dpkg",
+    "debuild"
   ],
   "author": "ahdinosaur",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/ahdinosaur/debian-image-builder/issues"
+    "url": "https://github.com/ahdinosaur/debian-package-builder/issues"
   },
-  "homepage": "https://github.com/ahdinosaur/debian-image-builder#readme"
+  "homepage": "https://github.com/ahdinosaur/debian-package-builder#readme"
 }
