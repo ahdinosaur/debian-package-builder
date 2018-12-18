@@ -1,6 +1,6 @@
 {
   "name": "debian-package-builder",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "build Debian packages (with Docker)",
   "bin": "./build",
   "directories": {
