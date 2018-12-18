@@ -137,7 +137,14 @@ else
   WORKDIR=$(mktemp -d)
 
   cp -r "${CWD}/${INPUT}" "${WORKDIR}/${NAME}"
+
   cd "${WORKDIR}/${NAME}"
+
+  if [ -x "${WORKDIR}/${NAME}/source" ]
+  then
+    "${WORKDIR}/${NAME}/source"
+    rm "${WORKDIR}/${NAME}/source"
+  fi
 
   env -i LC_CTYPE=C.UTF-8 \
     HOME="$HOME" \

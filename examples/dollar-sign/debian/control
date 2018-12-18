@@ -1,0 +1,15 @@
+Source: dollar-sign
+Section: misc
+Priority: optional
+Maintainer: "Michael Williams" <michael.williams@enspiral.com>
+Build-Depends:
+  debhelper (>=10~)
+Standards-Version: 4.1.4
+
+Package: dollar-sign
+Architecture: any
+Depends:
+  ${misc:Depends}
+  , ${shlibs:Depends}
+Description: For when you accidentally copy the dollar sign
+  and your shell returns "$: command not found".

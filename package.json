@@ -15,7 +15,8 @@
     "example:hello-sodium:arm64": "./build --docker --target nodejs --arch arm64 --input examples/hello-sodium --output output",
     "example:hello-level:amd64": "./build --docker --target nodejs --arch amd64 --input examples/hello-level --output output",
     "example:hello-level:armhf": "./build --docker --target nodejs --arch armhf --input examples/hello-level --output output",
-    "example:hello-level:arm64": "./build --docker --target nodejs --arch arm64 --input examples/hello-level --output output"
+    "example:hello-level:arm64": "./build --docker --target nodejs --arch arm64 --input examples/hello-level --output output",
+    "example:dollar-sign:amd64": "./build --docker --target nodejs --arch amd64 --input examples/dollar-sign --output output"
   },
   "repository": {
     "type": "git",
