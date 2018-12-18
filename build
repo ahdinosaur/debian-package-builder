@@ -130,7 +130,7 @@ fi
 
 if [ "${DOCKER}" = "y" ]
 then
-  ./build-docker ${ARGUMENTS}
+  ${DIRNAME}/build-docker ${ARGUMENTS}
 else
   umask 022
 
