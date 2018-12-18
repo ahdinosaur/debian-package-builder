@@ -3,7 +3,7 @@
 ARGUMENTS="$@"
 CWD=$(pwd)
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
-DIRNAME=$(dirname "$0")
+DIRNAME="$(dirname "$(readlink -f "$0")")"
 
 # with help from https://stackoverflow.com/a/29754866,
 
