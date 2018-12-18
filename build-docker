@@ -129,7 +129,7 @@ $DOCKER build \
   --build-arg ARCH=${ARCH} \
   --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
   -t ${BASE_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE} \
-  -f docker/base.Dockerfile \
+  -f ${DIRNAME}/docker/base.Dockerfile \
   ${DIRNAME}
 
 # build target image
@@ -139,7 +139,7 @@ $DOCKER build \
   --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
   --build-arg TARGET_VERSION=${TARGET_VERSION} \
   -t ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
-  -f docker/${TARGET}.Dockerfile \
+  -f ${DIRNAME}/docker/${TARGET}.Dockerfile \
   ${DIRNAME}
 
 echo $INPUT
