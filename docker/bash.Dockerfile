@@ -1,0 +1,4 @@
+ARG ARCH
+ARG DEBIAN_RELEASE
+
+FROM debian-package-builder:${ARCH}-${DEBIAN_RELEASE}
