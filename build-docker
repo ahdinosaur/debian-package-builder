@@ -28,7 +28,7 @@ ARCH=name
 
 TARGET_VERSION=-
 DEBIAN_RELEASE=buster
-HTTP_PROXY=
+CACHE=n
 
 INPUT_NAME=name
 
@@ -78,8 +78,8 @@ while true; do
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
-    --http-proxy)
-      HTTP_PROXY="$2"
+    --cache)
+      CACHE="y"
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
@@ -111,48 +111,86 @@ BASE_IMAGE_NAME=${BASE_IMAGE_NAME:-debian-package-builder}
 TARGET_IMAGE_NAME=${TARGET_IMAGE_NAME:-debian-${TARGET}-package-builder}
 CONTAINER_NAME=${CONTAINER_NAME:-debian-${TARGET}-package-builder-${ARCH}-work}
 
-PRESERVE_CONTAINER=0
-CONTAINER_EXISTS=$($DOCKER ps -a --filter name="$CONTAINER_NAME" -q)
 CONTAINER_RUNNING=$($DOCKER ps --filter name="$CONTAINER_NAME" -q)
-
 if [ "$CONTAINER_RUNNING" != "" ]; then
   echo "The build is already running in container $CONTAINER_NAME. Aborting."
   exit 1
 fi
+
+CONTAINER_EXISTS=$($DOCKER ps -a --filter name="$CONTAINER_NAME" -q)
 if [ "$CONTAINER_EXISTS" != "" ]; then
   $DOCKER rm -v "${CONTAINER_NAME}"
 fi
 
+function cleanup {
+  echo 'got EXIT signal... please wait'
+
+  $DOCKER stop debian-package-builder-apt-cache > /dev/null
+  $DOCKER rm -v debian-package-builder-apt-cache > /dev/null
+
+  # if [ "${TARGET}" == "nodejs" ]; then
+  #   docker stop debian-package-builder-npm-cache
+  # fi
+
+  CONTAINER_RUNNING=$($DOCKER ps --filter name="${CONTAINER_NAME}" -q)
+  if [ "${CONTAINER_RUNNING}" != "" ]; then
+    $DOCKER stop ${CONTAINER_NAME} > /dev/null
+  fi
+
+  CONTAINER_EXISTS=$($DOCKER ps -a --filter name="${CONTAINER_NAME}" -q)
+  if [ "${CONTAINER_EXISTS}" != "" ]; then
+    $DOCKER rm -v ${CONTAINER_NAME} > /dev/null
+  fi
+}
+
+trap cleanup EXIT
+
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
+
+# start caches
+#
+
+# apt cache
+$DOCKER run \
+  --name debian-package-builder-apt-cache \
+  --init -d \
+  --publish 3142:3142 \
+  --volume ${CWD}/${OUTPUT}/cache/apt:/var/cache/apt-cacher-ng \
+  sameersbn/apt-cacher-ng:3.1-1
+
+# end caches
+
+# start images
+#
 
 # build base image
 $DOCKER build \
-  --build-arg HTTP_PROXY="${HTTP_PROXY}" \
-  --build-arg http_proxy="${HTTP_PROXY}" \
   --build-arg ARCH="${ARCH}" \
   --build-arg DEBIAN_RELEASE="${DEBIAN_RELEASE}" \
+  --build-arg CACHE="${CACHE}" \
   -t ${BASE_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE} \
   -f ${DIRNAME}/docker/base.Dockerfile \
   ${DIRNAME}
 
 # build target image
 $DOCKER build \
-  --build-arg HTTP_PROXY="${HTTP_PROXY}" \
-  --build-arg http_proxy="${HTTP_PROXY}" \
   --build-arg ARCH="${ARCH}" \
   --build-arg DEBIAN_RELEASE="${DEBIAN_RELEASE}" \
   --build-arg TARGET_VERSION="${TARGET_VERSION}" \
+  --build-arg CACHE="${CACHE}" \
   -t ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
   -f ${DIRNAME}/docker/${TARGET}.Dockerfile \
   ${DIRNAME}
 
+# end images
+
+# start container
+#
+
 echo $INPUT
-trap "echo 'got CTRL+C... please wait 5s'; $DOCKER stop -t 5 ${CONTAINER_NAME}" SIGINT SIGTERM
 $DOCKER create \
   --name "${CONTAINER_NAME}" \
   --privileged \
-  --env HTTP_PROXY="${HTTP_PROXY}" \
-  --env http_proxy="${HTTP_PROXY}" \
   ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
   bash -e -o errexit -o pipefail -o noclobber -o nounset -c "
     cd /app; ./build ${NEXT_ARGUMENTS};
@@ -165,10 +203,5 @@ wait "$!"
 echo "copying results from output/"
 $DOCKER cp "${CONTAINER_NAME}":/app/output/. "${OUTPUT}"
 ls -lah output
-
-# cleanup
-if [ "$PRESERVE_CONTAINER" != "1" ]; then
-  $DOCKER rm -v $CONTAINER_NAME
-fi
 
 echo "Done! Your image(s) should be in output/"
