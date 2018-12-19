@@ -17,7 +17,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=hdtci:o:n:a
-LONGOPTS=help,docker,cache,target:,input:,output:,name:,arch:,target-version:,debian-release:
+LONGOPTS=help,docker,no-cache,target:,input:,output:,name:,arch:,target-version:,debian-release:
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -45,7 +45,7 @@ while true; do
             DOCKER=y
             shift
             ;;
-        --cache)
+        --no-cache)
             shift
             ;;
         -t|--target)
@@ -111,7 +111,7 @@ Usage:
 
   Docker-only arguments:
 
-    --cache: optional should we cache? default yes!
+    --no-cache: optional flag to not do caching
     --debian-release <release>: optional Debian release (default: buster) 
     --target-version <version>: optional target version
       - default Node.js version: 10

@@ -28,7 +28,7 @@ ARCH=name
 
 TARGET_VERSION=-
 DEBIAN_RELEASE=buster
-CACHE=n
+CACHE=y
 
 INPUT_NAME=name
 
@@ -78,10 +78,10 @@ while true; do
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
-    --cache)
-      CACHE="y"
-      NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
-      shift 2
+    --no-cache)
+      CACHE="n"
+      NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1")"
+      shift
       ;;
     *)
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1")"
@@ -128,9 +128,10 @@ function cleanup {
   $DOCKER stop debian-package-builder-apt-cache > /dev/null
   $DOCKER rm -v debian-package-builder-apt-cache > /dev/null
 
-  # if [ "${TARGET}" == "nodejs" ]; then
-  #   docker stop debian-package-builder-npm-cache
-  # fi
+  if [ "${TARGET}" == "nodejs" ]; then
+    $DOCKER stop debian-package-builder-npm-cache > /dev/null
+    $DOCKER rm -v debian-package-builder-npm-cache > /dev/null
+  fi
 
   CONTAINER_RUNNING=$($DOCKER ps --filter name="${CONTAINER_NAME}" -q)
   if [ "${CONTAINER_RUNNING}" != "" ]; then
@@ -158,10 +159,29 @@ $DOCKER run \
   --volume ${CWD}/${OUTPUT}/cache/apt:/var/cache/apt-cacher-ng \
   sameersbn/apt-cacher-ng:3.1-1
 
+if [ "${TARGET}" == "nodejs" ]
+then
+  $DOCKER build \
+    -t runk/npm-proxy-cache \
+    github.com/runk/npm-proxy-cache#v2.2.0
+
+  $DOCKER run \
+    --name debian-package-builder-npm-cache \
+    --init -d \
+    --publish 3143:3143 \
+    --volume ${CWD}/${OUTPUT}/cache/npm:/opt/npm-proxy-cache/cache \
+    runk/npm-proxy-cache \
+    --port 3143 \
+    --host 0.0.0.0 \
+    --expired
+fi
+
 # end caches
 
 # start images
 #
+
+echo cache: ${CACHE}
 
 # build base image
 $DOCKER build \

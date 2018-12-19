@@ -13,3 +13,11 @@ RUN \
   apt-get -y update && \
   apt-get -y --no-install-recommends install nodejs && \
   rm -rf /var/lib/apt/lists/*
+
+ARG CACHE
+
+RUN test "${CACHE}" = "y" && \
+  npm config set proxy http://172.17.0.1:3143/ && \
+  npm config set https-proxy http://172.17.0.1:3143/ && \
+  npm config set strict-ssl false \
+  || true
