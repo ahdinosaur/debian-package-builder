@@ -17,7 +17,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=hdti:o:n:a
-LONGOPTS=help,docker,target:,input:,output:,name:,arch:,node-version:,debian-release:,apt-proxy:
+LONGOPTS=help,docker,target:,input:,output:,name:,arch:,node-version:,debian-release:,http-proxy:
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -34,6 +34,7 @@ eval set -- "$PARSED"
 
 HELP=n DOCKER=n
 TARGET=- INPUT=- OUTPUT=- NAME=- ARCH=-
+HTTP_PROXY="${HTTP_PROXY-}"
 
 while true; do
     case "$1" in
@@ -71,7 +72,8 @@ while true; do
         --debian-release)
             shift 2
             ;;
-        --apt-proxy)
+        --http-proxy)
+            HTTP_PROXY="$2"
             shift 2
             ;;
         --)
@@ -114,7 +116,7 @@ Usage:
     --debian-release <release>: optional Debian release (default: buster) 
     --target-version <version>: optional target version
       - default Node.js version: 10
-    --apt-proxy <address>: optional apt proxy
+    --http-proxy <address>: optional http proxy
 
   Examples:
 
@@ -149,7 +151,10 @@ else
   env -i LC_CTYPE=C.UTF-8 \
     HOME="$HOME" \
     PATH="$PATH" \
-    debuild -a${ARCH} --no-sign
+    debuild \
+      --set-envvar HTTP_PROXY="${HTTP_PROXY}" \
+      -a${ARCH} \
+      --no-sign
 
   pwd
   ls -lh "${WORKDIR}"

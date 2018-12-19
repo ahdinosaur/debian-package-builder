@@ -28,7 +28,7 @@ ARCH=name
 
 TARGET_VERSION=-
 DEBIAN_RELEASE=buster
-APT_PROXY=
+HTTP_PROXY=
 
 INPUT_NAME=name
 
@@ -78,8 +78,8 @@ while true; do
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
-    --apt-proxy)
-      APT_PROXY="$2"
+    --http-proxy)
+      HTTP_PROXY="$2"
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
@@ -125,26 +125,32 @@ docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 # build base image
 $DOCKER build \
-  --build-arg http_proxy=${APT_PROXY} \
-  --build-arg ARCH=${ARCH} \
-  --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
+  --build-arg HTTP_PROXY="${HTTP_PROXY}" \
+  --build-arg http_proxy="${HTTP_PROXY}" \
+  --build-arg ARCH="${ARCH}" \
+  --build-arg DEBIAN_RELEASE="${DEBIAN_RELEASE}" \
   -t ${BASE_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE} \
   -f ${DIRNAME}/docker/base.Dockerfile \
   ${DIRNAME}
 
 # build target image
 $DOCKER build \
-  --build-arg http_proxy=${APT_PROXY} \
-  --build-arg ARCH=${ARCH} \
-  --build-arg DEBIAN_RELEASE=${DEBIAN_RELEASE} \
-  --build-arg TARGET_VERSION=${TARGET_VERSION} \
+  --build-arg HTTP_PROXY="${HTTP_PROXY}" \
+  --build-arg http_proxy="${HTTP_PROXY}" \
+  --build-arg ARCH="${ARCH}" \
+  --build-arg DEBIAN_RELEASE="${DEBIAN_RELEASE}" \
+  --build-arg TARGET_VERSION="${TARGET_VERSION}" \
   -t ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
   -f ${DIRNAME}/docker/${TARGET}.Dockerfile \
   ${DIRNAME}
 
 echo $INPUT
 trap "echo 'got CTRL+C... please wait 5s'; $DOCKER stop -t 5 ${CONTAINER_NAME}" SIGINT SIGTERM
-$DOCKER create --name "${CONTAINER_NAME}" --privileged \
+$DOCKER create \
+  --name "${CONTAINER_NAME}" \
+  --privileged \
+  --env HTTP_PROXY="${HTTP_PROXY}" \
+  --env http_proxy="${HTTP_PROXY}" \
   ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
   bash -e -o errexit -o pipefail -o noclobber -o nounset -c "
     cd /app; ./build ${NEXT_ARGUMENTS};
