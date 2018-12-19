@@ -17,7 +17,7 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 fi
 
 OPTIONS=hdti:o:n:a
-LONGOPTS=help,docker,target:,input:,output:,name:,arch:,node-version:,debian-release:,http-proxy:
+LONGOPTS=help,docker,target:,input:,output:,name:,arch:,target-version:,debian-release:,http_proxy:
 
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
@@ -66,7 +66,7 @@ while true; do
             ARCH="$2"
             shift 2
             ;;
-        --node-version)
+        --target-version)
             shift 2
             ;;
         --debian-release)

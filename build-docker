@@ -68,8 +68,8 @@ while true; do
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
-    --node-version)
-      NODE_VERSION="$2"
+    --target-version)
+      TARGET_VERSION="$2"
       NEXT_ARGUMENTS="${NEXT_ARGUMENTS} $(echo -n "$1" "$2")"
       shift 2
       ;;
@@ -100,6 +100,8 @@ then
   if [ "${TARGET}" == "nodejs" ]
   then
     TARGET_VERSION=10
+  else
+    TARGET_VERSION=0
   fi
 fi
 
