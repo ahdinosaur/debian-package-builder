@@ -146,12 +146,12 @@ else
     rm "${WORKDIR}/${NAME}/source"
   fi
 
-  env -i LC_CTYPE=C.UTF-8 \
-    HOME="$HOME" \
-    PATH="$PATH" \
-    debuild \
-      -a${ARCH} \
-      --no-sign
+  echo NODE_TLS_REJECT_UNAUTHORIZED ${NODE_TLS_REJECT_UNAUTHORIZED}
+
+  debuild \
+    --preserve-envvar=NODE_TLS_REJECT_UNAUTHORIZED \
+    -a${ARCH} \
+    --no-sign
 
   pwd
   ls -lh "${WORKDIR}"
