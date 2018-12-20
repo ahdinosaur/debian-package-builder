@@ -207,17 +207,18 @@ $DOCKER build \
 # start container
 #
 
-NODE_TLS_REJECT_UNAUTHORIZED=
-if [ "${CACHE}" == "y" ]
+CONTAINER_ARGS=
+
+if [ "${CACHE}" == "y" ] && [ "${TARGET}" == "nodejs" ]
 then
-  NODE_TLS_REJECT_UNAUTHORIZED=0
+  CONTAINER_ARGS="${CONTAINER_ARGS} -e NODE_TLS_REJECT_UNAUTHORIZED=0"
 fi
 
 echo $INPUT
 $DOCKER create \
   --name "${CONTAINER_NAME}" \
   --privileged \
-  -e NODE_TLS_REJECT_UNAUTHORIZED="${NODE_TLS_REJECT_UNAUTHORIZED}" \
+  ${CONTAINER_ARGS} \
   ${TARGET_IMAGE_NAME}:${ARCH}-${DEBIAN_RELEASE}-${TARGET_VERSION} \
   bash -e -o errexit -o pipefail -o noclobber -o nounset -c "
     cd /app; ./build ${NEXT_ARGUMENTS};

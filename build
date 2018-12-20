@@ -146,10 +146,15 @@ else
     rm "${WORKDIR}/${NAME}/source"
   fi
 
-  echo NODE_TLS_REJECT_UNAUTHORIZED ${NODE_TLS_REJECT_UNAUTHORIZED}
+  DEBUILD_ARGS=
+
+  if [ "${TARGET}" == "nodejs" ]
+  then
+    DEBUILD_ARGS="${DEBUILD_ARGS} --preserve-envvar=NODE_TLS_REJECT_UNAUTHORIZED"
+  fi
 
   debuild \
-    --preserve-envvar=NODE_TLS_REJECT_UNAUTHORIZED \
+    ${DEBUILD_ARGS} \
     -a${ARCH} \
     --no-sign
 
