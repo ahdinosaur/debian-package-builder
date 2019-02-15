@@ -156,7 +156,8 @@ else
   debuild \
     ${DEBUILD_ARGS} \
     -a${ARCH} \
-    --no-sign
+    -uc \
+    -us
 
   pwd
   ls -lh "${WORKDIR}"

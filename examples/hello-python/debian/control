@@ -1,0 +1,18 @@
+Source: hello-python
+Section: misc
+Priority: optional
+Maintainer: "Michael Williams" <michael.williams@enspiral.com>
+Build-Depends:
+  debhelper (>=9~)
+  , dh-python
+  , python3-all
+  , python3-setuptools
+Standards-Version: 4.1.4
+
+Package: hello-python
+Architecture: any
+Depends:
+  ${misc:Depends}
+  , ${shlibs:Depends}
+  , python3
+Description: An example python script packaged for Debian

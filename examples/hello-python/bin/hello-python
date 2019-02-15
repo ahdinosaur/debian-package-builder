@@ -1,0 +1,2 @@
+#!/bin/bash
+exec env python3 -m hello_python "$@"
