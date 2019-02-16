@@ -14,7 +14,7 @@ RUN \
 RUN \
   apt-get -y update && \
   apt-get -y --no-install-recommends install \
-    git curl gnupg \
+    git curl gnupg ca-certificates \
     libc6-dev build-essential libtool \
     debhelper devscripts fakeroot equivs \
     && \
