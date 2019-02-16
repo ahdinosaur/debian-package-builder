@@ -16,7 +16,7 @@ RUN \
   apt-get -y --no-install-recommends install \
     git curl gnupg \
     libc6-dev build-essential libtool \
-    debhelper devscripts fakeroot \
+    debhelper devscripts fakeroot equivs \
     && \
   rm -rf /var/lib/apt/lists/*
 

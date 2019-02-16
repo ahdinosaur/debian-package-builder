@@ -153,6 +153,11 @@ else
     DEBUILD_ARGS="${DEBUILD_ARGS} --preserve-envvar=NODE_TLS_REJECT_UNAUTHORIZED"
   fi
 
+  mk-build-deps \
+    --install \
+    --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' \
+    ${WORKDIR}/${NAME}/debian/control
+
   debuild \
     ${DEBUILD_ARGS} \
     -a${ARCH} \
