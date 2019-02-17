@@ -153,6 +153,7 @@ else
     DEBUILD_ARGS="${DEBUILD_ARGS} --preserve-envvar=NODE_TLS_REJECT_UNAUTHORIZED"
   fi
 
+  apt-get update -y
   mk-build-deps \
     --install \
     --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' \
