@@ -20,6 +20,14 @@ RUN \
     && \
   rm -rf /var/lib/apt/lists/*
 
+ARG DEBIAN_RELEASE
+RUN \
+  test "${DEBIAN_RELEASE}" = "stretch" && \
+  echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list && \
+  apt-get -y update && \
+  apt-get -t stretch-backports -y --no-install-recommends install debhelper \
+  || true
+
 COPY ./build /app/
 
 VOLUME ["/app/input", "/app/output"]
